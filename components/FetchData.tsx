@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function FetchData() {
   const [link, setLink] = useState("");
 
-  const linkCheck = (link) => {
+  const linkCheck = (link: string) => {
     const timesOfIndiaRegex = /^https?:\/\/timesofindia\.indiatimes\.com\/.+$/i;
     return timesOfIndiaRegex.test(link);
   };
