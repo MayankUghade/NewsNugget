@@ -3,7 +3,7 @@ import toi from "@/public/toi.png";
 export default function Introdunction() {
   return (
     <div className="flex text-center justify-center flex-col gap-3">
-      <h1 className="font-bold lg:text-6xl md:text-5xl text-2xl md:p-5">
+      <h1 className="font-bold lg:text-6xl md:text-5xl text-3xl md:p-5">
         Grab Your Daily Dose of TOI in Short from
         <br /> with{" "}
         <span className="bg-gradient-to-r from-red-500 to-purple-500 text-transparent w-fit bg-clip-text">
@@ -11,7 +11,7 @@ export default function Introdunction() {
         </span>
       </h1>
 
-      <p className="md:text-xl text-sm">
+      <p className="md:text-xl text-md">
         NewsNugget is an AI based application that helps user to sumarize{" "}
         <span className="text-red-500">Times of India</span> articles{" "}
       </p>
