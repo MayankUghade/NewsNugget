@@ -1,10 +1,12 @@
 import Image from "next/image";
 import toi from "@/public/toi.png";
+import { Button } from "./ui/button";
 export default function Introdunction() {
   return (
     <div className="flex text-center justify-center flex-col gap-3">
       <h1 className="font-bold lg:text-6xl md:text-5xl text-3xl md:p-5">
-        Grab Your Daily Dose of TOI in Short from
+        Grab Your Daily Dose of <span className="text-red-500">TOI</span> in
+        Short from
         <br /> with{" "}
         <span className="bg-gradient-to-r from-red-500 to-purple-500 text-transparent w-fit bg-clip-text">
           NewsNugget!
@@ -22,9 +24,9 @@ export default function Introdunction() {
           src={toi}
           alt="article"
         />
-        <button className="px-10 py-2 bg-orange-500 hover:bg-orange-400 rounded-lg font-semibold text-white">
+        <Button className=" bg-orange-500 hover:bg-orange-400 text-white">
           Explore
-        </button>
+        </Button>
       </div>
     </div>
   );

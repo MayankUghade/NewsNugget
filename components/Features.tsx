@@ -5,8 +5,7 @@ export default function Features() {
   return (
     <div className="flex flex-col items-center justify-center md:p-5 mt-8">
       <h1 className="md:text-4xl text-2xl text-center font-bold">
-        Important Features of{" "}
-        <span className="text-orange-500">NewsNugget</span>
+        Key Features of <span className="text-orange-500">NewsNugget</span>
       </h1>
 
       {/* points and image */}
