@@ -17,10 +17,12 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <div className="p-5 md:ml-[100px] md:mr-[100px] flex items-center justify-between">
+    <div className="p-5 lg:container flex items-center justify-between">
       <div className="flex items-center">
         <Image className="w-[50px] md:w-[70px]" src={logo} alt="" />
-        <h1 className="md:text-2xl text-md font-bold">NewsNugget</h1>
+        <h1 className="md:text-2xl text-md font-bold sm:flex hidden">
+          NewsNugget
+        </h1>
       </div>
 
       {/* some buttons */}

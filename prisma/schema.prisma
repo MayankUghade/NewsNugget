@@ -63,3 +63,11 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
+
+model Summary{
+    id            String    @id @default(cuid())
+    userEmail     String
+    link          String
+    article       String
+    summary       String
+}

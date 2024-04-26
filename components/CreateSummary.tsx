@@ -1,0 +1,121 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import Summarization from "./summarization";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
+
+const formSchema = z.object({
+  URL: z.string().min(2, {
+    message: "URL must be at least 2 characters.",
+  }),
+});
+
+function checkurl(url: string) {
+  const validPrefix = "https://timesofindia.indiatimes.com/";
+
+  if (!url.startsWith(validPrefix)) {
+    return false;
+  }
+}
+
+export default function CreateSummary() {
+  const [articleTitle, setArticleTitle] = useState("");
+  const [article, setArticle] = useState("");
+  const [loading, setloading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      URL: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setloading(true);
+    const { URL } = values;
+    const isValid = checkurl(URL);
+
+    if (isValid === false) {
+      toast.error("Please enter a valid TOI URL");
+      setloading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/scrapeData?URL=${URL}`);
+      const data = await response.json();
+      setArticleTitle(data.heading);
+      setArticle(data.data);
+      setloading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data. Please try again later.");
+    }
+  }
+
+  return (
+    <div className="lg:container">
+      <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-center">
+        Please provide the URL of the{" "}
+        <span className="bg-gradient-to-r from-red-500 to-purple-500 text-transparent w-fit bg-clip-text">
+          Times of India
+        </span>{" "}
+        article you'd like to summarize.
+      </h1>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-5">
+          <FormField
+            control={form.control}
+            name="URL"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="paste the times of india url"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {loading ? (
+            <Button
+              disabled
+              className="items-center bg-orange-500 text-white hover:bg-orange-400"
+            >
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="items-center bg-orange-500 text-white hover:bg-orange-400"
+            >
+              Submit
+            </Button>
+          )}
+        </form>
+      </Form>
+
+      {/* Code summarization logic */}
+
+      <Summarization title={articleTitle} orignalArticle={article} />
+    </div>
+  );
+}
