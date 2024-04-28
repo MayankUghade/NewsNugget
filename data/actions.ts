@@ -5,7 +5,7 @@ export async function summarizeAI(data: string) {
     "https://api-inference.huggingface.co/models/Falconsai/medical_summarization",
     {
       headers: {
-        Authorization: "Bearer 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",
+        Authorization: `Bearer ${process.env.HF_TOKEN}`,
       },
       method: "POST",
       body: JSON.stringify(data),

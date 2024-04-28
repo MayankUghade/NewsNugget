@@ -16,6 +16,7 @@ import Summarization from "./summarization";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 const formSchema = z.object({
   URL: z.string().min(2, {
@@ -34,6 +35,7 @@ function checkurl(url: string) {
 export default function CreateSummary() {
   const [articleTitle, setArticleTitle] = useState("");
   const [article, setArticle] = useState("");
+  const [link, setLink] = useState("");
   const [loading, setloading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,6 +61,7 @@ export default function CreateSummary() {
       const data = await response.json();
       setArticleTitle(data.heading);
       setArticle(data.data);
+      setLink(URL);
       setloading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -67,8 +70,11 @@ export default function CreateSummary() {
   }
 
   return (
-    <div className="lg:container">
-      <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-center">
+    <div className="lg:container min-h-screen">
+      <Link href="/saved" className="flex items-center justify-end">
+        <Button variant="outline">Saved summaries</Button>
+      </Link>
+      <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-center mt-3">
         Please provide the URL of the{" "}
         <span className="bg-gradient-to-r from-red-500 to-purple-500 text-transparent w-fit bg-clip-text">
           Times of India
@@ -114,8 +120,11 @@ export default function CreateSummary() {
       </Form>
 
       {/* Code summarization logic */}
-
-      <Summarization title={articleTitle} orignalArticle={article} />
+      <Summarization
+        title={articleTitle}
+        orignalArticle={article}
+        link={link}
+      />
     </div>
   );
 }
