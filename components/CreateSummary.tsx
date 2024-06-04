@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Summarization from "./summarization";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -28,9 +28,7 @@ const formSchema = z.object({
 function checkurl(url: string) {
   const validPrefix = "https://timesofindia.indiatimes.com/";
 
-  if (!url.startsWith(validPrefix)) {
-    return false;
-  }
+  return url.startsWith(validPrefix);
 }
 
 export default function CreateSummary() {
@@ -38,6 +36,7 @@ export default function CreateSummary() {
   const [article, setArticle] = useState("");
   const [link, setLink] = useState("");
   const [loading, setloading] = useState(false);
+  const [url, setUrl] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,29 +45,40 @@ export default function CreateSummary() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setloading(true);
-    const { URL } = values;
-    const isValid = checkurl(URL);
-
-    if (isValid === false) {
-      toast.error("Please enter a valid TOI URL");
-      setloading(false);
-      return;
-    }
-
+  async function fetchArticleData(url: string) {
     try {
-      const articleData = await fetchArticle(URL);
+      const articleData = await fetchArticle(url);
       if (articleData) {
         setArticleTitle(articleData.heading);
         setArticle(articleData.data);
-        setLink(URL);
+        setLink(url);
         setloading(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch data. Please try again later.");
+      setloading(false);
     }
+  }
+
+  useEffect(() => {
+    if (url) {
+      fetchArticleData(url);
+    }
+  }, [url]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setloading(true);
+    const { URL } = values;
+    const isValid = checkurl(URL);
+
+    if (!isValid) {
+      toast.error("Please enter a valid TOI URL");
+      setloading(false);
+      return;
+    }
+
+    setUrl(URL); // Set the URL to trigger the useEffect
   }
 
   return (
