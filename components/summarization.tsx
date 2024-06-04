@@ -30,12 +30,10 @@ export default function Summarization({
         return;
       }
       const data = await summarizeAI(orignalArticle);
-      const extractedSummary = data.map((item: any) => {
-        return item.summary_text;
-      });
-      const combinedSummary = extractedSummary.join(" ");
-      console.log(combinedSummary);
-      setSummary(combinedSummary);
+      if (data) {
+        console.log(data[0].summary_text);
+        setSummary(data[0].summary_text);
+      }
     } catch (error) {
       console.error("Error while summarizing:", error);
       toast.error("Error while summarizing the article");

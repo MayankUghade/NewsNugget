@@ -17,6 +17,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { fetchArticle } from "@/data/scrapeData";
 
 const formSchema = z.object({
   URL: z.string().min(2, {
@@ -57,12 +58,13 @@ export default function CreateSummary() {
     }
 
     try {
-      const response = await fetch(`/api/scrapeData?URL=${URL}`);
-      const data = await response.json();
-      setArticleTitle(data.heading);
-      setArticle(data.data);
-      setLink(URL);
-      setloading(false);
+      const articleData = await fetchArticle(URL);
+      if (articleData) {
+        setArticleTitle(articleData.heading);
+        setArticle(articleData.data);
+        setLink(URL);
+        setloading(false);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch data. Please try again later.");
