@@ -29,10 +29,11 @@ export default function Summarization({
         toast.error("Add the link before summarizing");
         return;
       }
-      const data = await summarizeAI(orignalArticle);
+      const data = await summarizeAI(orignalArticle, title);
       if (data) {
-        console.log(data[0].summary_text);
-        setSummary(data[0].summary_text);
+        const formattedSummary = `${data.tldr}\n\nKey Points:\n` + data.keyPoints.map(pt => `- ${pt}`).join('\n');
+        console.log(formattedSummary);
+        setSummary(formattedSummary);
       }
     } catch (error) {
       console.error("Error while summarizing:", error);
